@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 02-05-2025 a las 18:03:37
--- Versión del servidor: 10.4.24-MariaDB
--- Versión de PHP: 8.1.6
+-- Servidor: localhost:3306
+-- Tiempo de generación: 09-05-2025 a las 17:12:16
+-- Versión del servidor: 5.7.24
+-- Versión de PHP: 7.4.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,10 +29,9 @@ USE `db_karolasoft`;
 -- Estructura de tabla para la tabla `administrador`
 --
 
-DROP TABLE IF EXISTS `administrador`;
 CREATE TABLE `administrador` (
   `id_administrador` int(11) NOT NULL,
-  `id_usuario` int(3) NOT NULL,
+  `id_usuario` int(3) DEFAULT NULL,
   `nivel_acceso` enum('Básico','Avanzado') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -42,13 +41,12 @@ CREATE TABLE `administrador` (
 -- Estructura de tabla para la tabla `boletin`
 --
 
-DROP TABLE IF EXISTS `boletin`;
 CREATE TABLE `boletin` (
   `id_boletin` int(11) NOT NULL,
-  `id_cliente` int(3) NOT NULL,
+  `id_cliente` int(3) DEFAULT NULL,
   `titulo` varchar(100) NOT NULL,
   `contenido` text NOT NULL,
-  `fecha_envio` datetime NOT NULL DEFAULT current_timestamp()
+  `fecha_envio` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -57,11 +55,10 @@ CREATE TABLE `boletin` (
 -- Estructura de tabla para la tabla `categoria`
 --
 
-DROP TABLE IF EXISTS `categoria`;
 CREATE TABLE `categoria` (
   `id_categoria` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `descripcion` text NOT NULL
+  `descripcion` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -70,12 +67,11 @@ CREATE TABLE `categoria` (
 -- Estructura de tabla para la tabla `cliente`
 --
 
-DROP TABLE IF EXISTS `cliente`;
 CREATE TABLE `cliente` (
   `id_cliente` int(11) NOT NULL,
-  `id_usuario` int(3) NOT NULL,
-  `direccion` varchar(255) NOT NULL,
-  `telefono` varchar(15) NOT NULL
+  `id_usuario` int(3) DEFAULT NULL,
+  `direccion` varchar(255) DEFAULT NULL,
+  `telefono` varchar(15) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -84,13 +80,12 @@ CREATE TABLE `cliente` (
 -- Estructura de tabla para la tabla `convenio`
 --
 
-DROP TABLE IF EXISTS `convenio`;
 CREATE TABLE `convenio` (
   `id_convenio` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `descripcion` text NOT NULL,
+  `descripcion` text,
   `fecha_inicio` date NOT NULL,
-  `fecha_fin` date NOT NULL
+  `fecha_fin` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -99,11 +94,10 @@ CREATE TABLE `convenio` (
 -- Estructura de tabla para la tabla `convenio_producto`
 --
 
-DROP TABLE IF EXISTS `convenio_producto`;
 CREATE TABLE `convenio_producto` (
   `id_Convenio_Producto` int(3) NOT NULL,
-  `id_convenio` int(3) NOT NULL,
-  `id_producto` int(3) NOT NULL
+  `id_convenio` int(3) DEFAULT NULL,
+  `id_producto` int(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -112,11 +106,10 @@ CREATE TABLE `convenio_producto` (
 -- Estructura de tabla para la tabla `descuento`
 --
 
-DROP TABLE IF EXISTS `descuento`;
 CREATE TABLE `descuento` (
   `id_descuento` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
-  `porcentaje` decimal(5,2) NOT NULL,
+  `porcentaje` decimal(5,2) DEFAULT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -127,12 +120,11 @@ CREATE TABLE `descuento` (
 -- Estructura de tabla para la tabla `devolucion`
 --
 
-DROP TABLE IF EXISTS `devolucion`;
 CREATE TABLE `devolucion` (
   `id_devolucion` int(11) NOT NULL,
   `id_pedido` int(11) NOT NULL,
   `motivo` text NOT NULL,
-  `fecha_solicitud` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_solicitud` datetime DEFAULT CURRENT_TIMESTAMP,
   `estado` enum('Pendiente','Aprobado','Rechazado') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -142,12 +134,11 @@ CREATE TABLE `devolucion` (
 -- Estructura de tabla para la tabla `envio`
 --
 
-DROP TABLE IF EXISTS `envio`;
 CREATE TABLE `envio` (
   `id_envio` int(11) NOT NULL,
   `id_pedido` int(11) NOT NULL,
   `direccion_envio` varchar(255) NOT NULL,
-  `fecha_envio` datetime NOT NULL,
+  `fecha_envio` datetime DEFAULT NULL,
   `estado` enum('Pendiente','En tránsito','Entregado') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -157,13 +148,12 @@ CREATE TABLE `envio` (
 -- Estructura de tabla para la tabla `historial_compras`
 --
 
-DROP TABLE IF EXISTS `historial_compras`;
 CREATE TABLE `historial_compras` (
   `id_historial` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL,
-  `fecha_compra` datetime NOT NULL DEFAULT current_timestamp()
+  `fecha_compra` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -172,13 +162,12 @@ CREATE TABLE `historial_compras` (
 -- Estructura de tabla para la tabla `informe_inventario`
 --
 
-DROP TABLE IF EXISTS `informe_inventario`;
 CREATE TABLE `informe_inventario` (
   `id_informe_inventario` int(11) NOT NULL,
   `id_inventario` int(11) NOT NULL,
-  `fecha_generacion` datetime NOT NULL DEFAULT current_timestamp(),
-  `productos_bajo_stock` int(11) NOT NULL,
-  `productos_sin_stock` int(11) NOT NULL
+  `fecha_generacion` datetime DEFAULT CURRENT_TIMESTAMP,
+  `productos_bajo_stock` int(11) DEFAULT NULL,
+  `productos_sin_stock` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -187,13 +176,12 @@ CREATE TABLE `informe_inventario` (
 -- Estructura de tabla para la tabla `informe_ventas`
 --
 
-DROP TABLE IF EXISTS `informe_ventas`;
 CREATE TABLE `informe_ventas` (
   `id_informe_ventas` int(11) NOT NULL,
-  `id_pedido` int(11) NOT NULL,
-  `fecha_generacion` datetime NOT NULL DEFAULT current_timestamp(),
-  `total_ventas` decimal(10,2) NOT NULL,
-  `productos_vendidos` int(11) NOT NULL
+  `id_pedido` int(11) DEFAULT NULL,
+  `fecha_generacion` datetime DEFAULT CURRENT_TIMESTAMP,
+  `total_ventas` decimal(10,2) DEFAULT NULL,
+  `productos_vendidos` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -202,12 +190,11 @@ CREATE TABLE `informe_ventas` (
 -- Estructura de tabla para la tabla `inventario`
 --
 
-DROP TABLE IF EXISTS `inventario`;
 CREATE TABLE `inventario` (
   `id_inventario` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL,
-  `ultima_actualizacion` datetime NOT NULL DEFAULT current_timestamp()
+  `ultima_actualizacion` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -216,11 +203,10 @@ CREATE TABLE `inventario` (
 -- Estructura de tabla para la tabla `metodo_pago`
 --
 
-DROP TABLE IF EXISTS `metodo_pago`;
 CREATE TABLE `metodo_pago` (
   `id_metodo_pago` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
-  `descripcion` text NOT NULL
+  `descripcion` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -229,13 +215,12 @@ CREATE TABLE `metodo_pago` (
 -- Estructura de tabla para la tabla `notificacion`
 --
 
-DROP TABLE IF EXISTS `notificacion`;
 CREATE TABLE `notificacion` (
   `id_notificacion` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `mensaje` text NOT NULL,
-  `fecha_envio` datetime NOT NULL DEFAULT current_timestamp(),
-  `leida` tinyint(1) NOT NULL DEFAULT 0
+  `fecha_envio` datetime DEFAULT CURRENT_TIMESTAMP,
+  `leida` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -244,13 +229,12 @@ CREATE TABLE `notificacion` (
 -- Estructura de tabla para la tabla `pago`
 --
 
-DROP TABLE IF EXISTS `pago`;
 CREATE TABLE `pago` (
   `id_pago` int(11) NOT NULL,
   `id_pedido` int(11) NOT NULL,
   `id_metodo_pago` int(11) NOT NULL,
   `monto` decimal(10,2) NOT NULL,
-  `fecha_pago` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_pago` datetime DEFAULT CURRENT_TIMESTAMP,
   `metodo_pago` enum('Tarjeta','Efectivo','Transferencia') NOT NULL,
   `estado` enum('Pendiente','Completado','Fallido') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -261,11 +245,10 @@ CREATE TABLE `pago` (
 -- Estructura de tabla para la tabla `pedido`
 --
 
-DROP TABLE IF EXISTS `pedido`;
 CREATE TABLE `pedido` (
   `id_pedido` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
-  `fecha_pedido` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_pedido` datetime DEFAULT CURRENT_TIMESTAMP,
   `total` decimal(10,2) NOT NULL,
   `estado` enum('Pendiente','Procesado','Enviado','Completado','Cancelado') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -276,14 +259,13 @@ CREATE TABLE `pedido` (
 -- Estructura de tabla para la tabla `producto`
 --
 
-DROP TABLE IF EXISTS `producto`;
 CREATE TABLE `producto` (
   `id_producto` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `descripcion` text NOT NULL,
+  `descripcion` text,
   `precio` decimal(10,2) NOT NULL,
   `stock` int(11) NOT NULL,
-  `id_categoria` int(11) NOT NULL
+  `id_categoria` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -292,11 +274,10 @@ CREATE TABLE `producto` (
 -- Estructura de tabla para la tabla `producto_categoria`
 --
 
-DROP TABLE IF EXISTS `producto_categoria`;
 CREATE TABLE `producto_categoria` (
   `id_Producto_Categoria` int(3) NOT NULL,
-  `id_categoria` int(3) NOT NULL,
-  `id_producto` int(3) NOT NULL
+  `id_categoria` int(3) DEFAULT NULL,
+  `id_producto` int(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -305,12 +286,11 @@ CREATE TABLE `producto_categoria` (
 -- Estructura de tabla para la tabla `promocion`
 --
 
-DROP TABLE IF EXISTS `promocion`;
 CREATE TABLE `promocion` (
   `id_promocion` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `descripcion` text NOT NULL,
-  `descuento_porcentaje` decimal(5,2) NOT NULL,
+  `descripcion` text,
+  `descuento_porcentaje` decimal(5,2) DEFAULT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -321,14 +301,13 @@ CREATE TABLE `promocion` (
 -- Estructura de tabla para la tabla `resena`
 --
 
-DROP TABLE IF EXISTS `resena`;
 CREATE TABLE `resena` (
   `id_resena` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
-  `calificacion` int(11) NOT NULL,
-  `comentario` text NOT NULL,
-  `fecha` datetime NOT NULL DEFAULT current_timestamp()
+  `calificacion` int(11) DEFAULT NULL,
+  `comentario` text,
+  `fecha` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -337,15 +316,23 @@ CREATE TABLE `resena` (
 -- Estructura de tabla para la tabla `usuario`
 --
 
-DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE `usuario` (
   `id_usuario` int(11) NOT NULL,
+  `documento` varchar(10) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `correo` varchar(100) NOT NULL,
-  `contraseña` varchar(255) NOT NULL,
-  `rol` enum('Cliente','Administrador') NOT NULL,
-  `fecha_registro` datetime NOT NULL DEFAULT current_timestamp()
+  `telefono` varchar(10) NOT NULL,
+  `contrasena` varchar(255) NOT NULL,
+  `rol` varchar(20) NOT NULL DEFAULT 'Cliente',
+  `fecha_registro` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`id_usuario`, `documento`, `nombre`, `correo`, `telefono`, `contrasena`, `rol`, `fecha_registro`) VALUES
+(1, '12345678', 'neider arteaga', 'n@gmail.com', '3100345639', '$2b$10$uNiNcjW29XeiyTQD8zWISebKHx2GN99u05tkjupf19cH4gUebzJ5i', 'Cliente', '2025-05-09 11:46:59.204');
 
 --
 -- Índices para tablas volcadas
@@ -505,7 +492,9 @@ ALTER TABLE `resena`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id_usuario`),
-  ADD UNIQUE KEY `correo` (`correo`);
+  ADD UNIQUE KEY `correo` (`correo`),
+  ADD UNIQUE KEY `telefono` (`telefono`),
+  ADD UNIQUE KEY `documento` (`documento`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -641,7 +630,7 @@ ALTER TABLE `resena`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas

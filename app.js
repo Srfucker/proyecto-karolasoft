@@ -1,11 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-/* const usuarioRoutes = require('./router/UsuarioRouter'); */
-/* const articuloRoutes = require('./router/ArticuloRouter'); */
-/* const loginRoutes = require('./router/LoginRouter'); */
-const path = require('path');
+const rutacliente = require('./vista/clienteRutas');
+//const rutaadmin = require('./vista/AdminRutas');
+//const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 4545;
+const PORT = process.env.PORT || 3333;
 
 // Middleware
 app.use(cors({
@@ -15,17 +14,14 @@ app.use(cors({
     credentials: true // Habilita el envío de credenciales si es necesario
 }));
 
-// Middleware para parseo de solicitudes
+  // Middleware para parseo de solicitudes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'public')));
 
 // Rutas 
-/* app.use('/', usuarioRoutes);
-app.use('/', articuloRoutes);
-app.use('/', loginRoutes); */
-// Middleware de manejo de errores
-
+app.use('/', rutacliente);
+//app.use('/', rutaadmin);
 
 // Iniciar el servidor
 app.listen(PORT, () => {
