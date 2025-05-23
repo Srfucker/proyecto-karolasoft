@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost:3306
--- Tiempo de generación: 09-05-2025 a las 17:12:16
--- Versión del servidor: 5.7.24
--- Versión de PHP: 7.4.19
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 20-05-2025 a las 18:03:23
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -33,7 +33,7 @@ CREATE TABLE `administrador` (
   `id_administrador` int(11) NOT NULL,
   `id_usuario` int(3) DEFAULT NULL,
   `nivel_acceso` enum('Básico','Avanzado') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -46,8 +46,8 @@ CREATE TABLE `boletin` (
   `id_cliente` int(3) DEFAULT NULL,
   `titulo` varchar(100) NOT NULL,
   `contenido` text NOT NULL,
-  `fecha_envio` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `fecha_envio` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -58,8 +58,8 @@ CREATE TABLE `boletin` (
 CREATE TABLE `categoria` (
   `id_categoria` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `descripcion` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `descripcion` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -72,7 +72,7 @@ CREATE TABLE `cliente` (
   `id_usuario` int(3) DEFAULT NULL,
   `direccion` varchar(255) DEFAULT NULL,
   `telefono` varchar(15) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -83,10 +83,10 @@ CREATE TABLE `cliente` (
 CREATE TABLE `convenio` (
   `id_convenio` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `descripcion` text,
+  `descripcion` text DEFAULT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -98,7 +98,7 @@ CREATE TABLE `convenio_producto` (
   `id_Convenio_Producto` int(3) NOT NULL,
   `id_convenio` int(3) DEFAULT NULL,
   `id_producto` int(3) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -112,7 +112,7 @@ CREATE TABLE `descuento` (
   `porcentaje` decimal(5,2) DEFAULT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -124,9 +124,9 @@ CREATE TABLE `devolucion` (
   `id_devolucion` int(11) NOT NULL,
   `id_pedido` int(11) NOT NULL,
   `motivo` text NOT NULL,
-  `fecha_solicitud` datetime DEFAULT CURRENT_TIMESTAMP,
+  `fecha_solicitud` datetime DEFAULT current_timestamp(),
   `estado` enum('Pendiente','Aprobado','Rechazado') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -140,7 +140,7 @@ CREATE TABLE `envio` (
   `direccion_envio` varchar(255) NOT NULL,
   `fecha_envio` datetime DEFAULT NULL,
   `estado` enum('Pendiente','En tránsito','Entregado') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -153,8 +153,8 @@ CREATE TABLE `historial_compras` (
   `id_cliente` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL,
-  `fecha_compra` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `fecha_compra` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -165,10 +165,10 @@ CREATE TABLE `historial_compras` (
 CREATE TABLE `informe_inventario` (
   `id_informe_inventario` int(11) NOT NULL,
   `id_inventario` int(11) NOT NULL,
-  `fecha_generacion` datetime DEFAULT CURRENT_TIMESTAMP,
+  `fecha_generacion` datetime DEFAULT current_timestamp(),
   `productos_bajo_stock` int(11) DEFAULT NULL,
   `productos_sin_stock` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -179,10 +179,10 @@ CREATE TABLE `informe_inventario` (
 CREATE TABLE `informe_ventas` (
   `id_informe_ventas` int(11) NOT NULL,
   `id_pedido` int(11) DEFAULT NULL,
-  `fecha_generacion` datetime DEFAULT CURRENT_TIMESTAMP,
+  `fecha_generacion` datetime DEFAULT current_timestamp(),
   `total_ventas` decimal(10,2) DEFAULT NULL,
   `productos_vendidos` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -194,8 +194,8 @@ CREATE TABLE `inventario` (
   `id_inventario` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL,
-  `ultima_actualizacion` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `ultima_actualizacion` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -206,8 +206,8 @@ CREATE TABLE `inventario` (
 CREATE TABLE `metodo_pago` (
   `id_metodo_pago` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
-  `descripcion` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `descripcion` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -219,9 +219,9 @@ CREATE TABLE `notificacion` (
   `id_notificacion` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `mensaje` text NOT NULL,
-  `fecha_envio` datetime DEFAULT CURRENT_TIMESTAMP,
-  `leida` tinyint(1) DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `fecha_envio` datetime DEFAULT current_timestamp(),
+  `leida` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -234,10 +234,10 @@ CREATE TABLE `pago` (
   `id_pedido` int(11) NOT NULL,
   `id_metodo_pago` int(11) NOT NULL,
   `monto` decimal(10,2) NOT NULL,
-  `fecha_pago` datetime DEFAULT CURRENT_TIMESTAMP,
+  `fecha_pago` datetime DEFAULT current_timestamp(),
   `metodo_pago` enum('Tarjeta','Efectivo','Transferencia') NOT NULL,
   `estado` enum('Pendiente','Completado','Fallido') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -248,10 +248,10 @@ CREATE TABLE `pago` (
 CREATE TABLE `pedido` (
   `id_pedido` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
-  `fecha_pedido` datetime DEFAULT CURRENT_TIMESTAMP,
+  `fecha_pedido` datetime DEFAULT current_timestamp(),
   `total` decimal(10,2) NOT NULL,
   `estado` enum('Pendiente','Procesado','Enviado','Completado','Cancelado') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -262,11 +262,11 @@ CREATE TABLE `pedido` (
 CREATE TABLE `producto` (
   `id_producto` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `descripcion` text,
+  `descripcion` text DEFAULT NULL,
   `precio` decimal(10,2) NOT NULL,
   `stock` int(11) NOT NULL,
   `id_categoria` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -278,7 +278,7 @@ CREATE TABLE `producto_categoria` (
   `id_Producto_Categoria` int(3) NOT NULL,
   `id_categoria` int(3) DEFAULT NULL,
   `id_producto` int(3) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -289,11 +289,11 @@ CREATE TABLE `producto_categoria` (
 CREATE TABLE `promocion` (
   `id_promocion` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `descripcion` text,
+  `descripcion` text DEFAULT NULL,
   `descuento_porcentaje` decimal(5,2) DEFAULT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -306,9 +306,29 @@ CREATE TABLE `resena` (
   `id_producto` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
   `calificacion` int(11) DEFAULT NULL,
-  `comentario` text,
-  `fecha` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `comentario` text DEFAULT NULL,
+  `fecha` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `token`
+--
+
+CREATE TABLE `token` (
+  `idToken` int(11) NOT NULL,
+  `usuario` varchar(200) NOT NULL,
+  `rol` varchar(20) NOT NULL,
+  `llave` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `token`
+--
+
+INSERT INTO `token` (`idToken`, `usuario`, `rol`, `llave`) VALUES
+(1, 'neider', 'Cliente', '3eee1ae7745a31fcb09dcfe3f9fddfc125f5f0d9e716296e7a3be534977aeb83');
 
 -- --------------------------------------------------------
 
@@ -324,15 +344,16 @@ CREATE TABLE `usuario` (
   `telefono` varchar(10) NOT NULL,
   `contrasena` varchar(255) NOT NULL,
   `rol` varchar(20) NOT NULL DEFAULT 'Cliente',
-  `fecha_registro` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `fecha_registro` varchar(30) NOT NULL,
+  `estado` varchar(20) NOT NULL DEFAULT 'Activo'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `documento`, `nombre`, `correo`, `telefono`, `contrasena`, `rol`, `fecha_registro`) VALUES
-(1, '12345678', 'neider arteaga', 'n@gmail.com', '3100345639', '$2b$10$uNiNcjW29XeiyTQD8zWISebKHx2GN99u05tkjupf19cH4gUebzJ5i', 'Cliente', '2025-05-09 11:46:59.204');
+INSERT INTO `usuario` (`id_usuario`, `documento`, `nombre`, `correo`, `telefono`, `contrasena`, `rol`, `fecha_registro`, `estado`) VALUES
+(1, '123456789', 'neider', 'neider@gmail.com', '3333333333', '$2b$10$OuaN7BjLHwjwKYgB6ekWWud5oikWXvOsVZTwziGpMgs/ykRTTfhuC', 'Cliente', '2025-05-16 11:51:42.688', 'Activo');
 
 --
 -- Índices para tablas volcadas
@@ -486,6 +507,13 @@ ALTER TABLE `resena`
   ADD PRIMARY KEY (`id_resena`),
   ADD KEY `id_producto` (`id_producto`),
   ADD KEY `id_cliente` (`id_cliente`);
+
+--
+-- Indices de la tabla `token`
+--
+ALTER TABLE `token`
+  ADD PRIMARY KEY (`idToken`),
+  ADD UNIQUE KEY `usuario` (`usuario`);
 
 --
 -- Indices de la tabla `usuario`
