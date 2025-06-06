@@ -40,8 +40,8 @@ class LoginClienteControlador {
             const llave = modelo.generarLlaveSegura();
 
             await modelo.guardarToken({
-                idUsuario: usuario.idUsuario,
-                nombres: usuario.nombres,
+                id_usuario: usuario.idUsuario,
+                nombre: usuario.nombre,
                 rol: usuario.rol,
                 correo: usuario.correo,
                 llave

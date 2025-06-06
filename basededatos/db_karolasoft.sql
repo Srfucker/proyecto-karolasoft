@@ -24,19 +24,6 @@ CREATE DATABASE IF NOT EXISTS `db_karolasoft` DEFAULT CHARACTER SET utf8mb4 COLL
 USE `db_karolasoft`;
 
 -- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `administrador`
---
-
-CREATE TABLE `administrador` (
-  `id_administrador` int(11) NOT NULL,
-  `id_usuario` int(3) DEFAULT NULL,
-  `nivel_acceso` enum('Básico','Avanzado') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
 --
 -- Estructura de tabla para la tabla `boletin`
 --
@@ -347,6 +334,19 @@ CREATE TABLE `usuario` (
   `fecha_registro` varchar(30) NOT NULL,
   `estado` varchar(20) NOT NULL DEFAULT 'Activo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Estructura de tabla para la tabla `administrador`
+--
+  
+CREATE TABLE administradores (
+  `id_administrador` int(11) NOT NULL,
+  `id_usuario` int(3) DEFAULT NULL,
+  `nivel_acceso` enum('Básico','Avanzado') NOT NULL
+  nombre VARCHAR(100),
+  correo VARCHAR(100) UNIQUE,
+  contrasena VARCHAR(255)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;;
 
 --
 -- Volcado de datos para la tabla `usuario`
@@ -775,3 +775,6 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+ALTER TABLE usuarios ADD COLUMN token_recovery VARCHAR(255);
+ALTER TABLE usuarios ADD COLUMN token_expiration DATETIME;

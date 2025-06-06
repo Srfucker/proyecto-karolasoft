@@ -1,9 +1,10 @@
 const modelo = require('../modelo/AdminModelo');
+const jwt = require('jsonwebtoken');
 
 class AdminControlador {
     // funcion crear nuevo cliente
     static async crearUsuario(req, res) {
-        const { t1: doc, t2: name, t3: tel, t4: email, t5: contra, t6: rol } = req.body;
+        const { t1: doc, t2: name, t3: tel, t4: email, t5: contra, t6: rol = "Admin"} = req.body;
         // ------------👁️‍🗨️ validaciones👁️‍🗨️----------------
         // Validar campos vacíos❓❓❓❓❓----------------
         const errorCampos = AdminControlador.verCampos(doc, name, tel, email, contra, rol);
@@ -36,6 +37,11 @@ class AdminControlador {
             return res.status(400).json({ error: errorkey });
         }
         
+            const existe = await modelo.buscarPorCorreoODocumento(email, doc);
+            if (existe) {
+                return res.status(409).json({ error: 'Ya existe un usuario con este correo o documento.' });
+            }
+
         try {
             const result = await modelo.crearUsuarios(doc, name, tel, email, contra, rol);
             res.status(201).json({ mensaje: 'Usuario creado', id: result.insertId });
@@ -104,7 +110,25 @@ class AdminControlador {
             return null;
         }
     }
+
+//modificar perfil admin 
+
+    static async modificarPerfil(req, res) {
+    try {
+      const token = req.headers.authorization?.split(' ')[1];
+      if (!token) return res.status(401).json({ error: 'Token no proporcionado' });
+
+      const decoded = jwt.verify(token, 'tu_clave_secreta'); // Usa tu clave JWT
+      const idAdmin = decoded.id;
+
+      const resultado = await AdminModelo.actualizarPerfil(idAdmin, req.body);
+      res.status(200).json(resultado);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
     //👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊👊
 }//cerrar clase controlador
+
 
 module.exports = AdminControlador;

@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const rutacliente = require('./vista/clienteRutas');
-//const rutaadmin = require('./vista/AdminRutas');
+const rutaadmin = require('./vista/AdminRutas');
 //const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3333;
@@ -14,6 +14,7 @@ app.use(cors({
     credentials: true // Habilita el envío de credenciales si es necesario
 }));
 
+
   // Middleware para parseo de solicitudes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rutas 
 app.use('/', rutacliente);
-//app.use('/', rutaadmin);
+app.use('/', rutaadmin);
 
 // Iniciar el servidor
 app.listen(PORT, () => {
